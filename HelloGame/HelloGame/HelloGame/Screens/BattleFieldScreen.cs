@@ -18,8 +18,8 @@ namespace HelloGame.Screens
     /// </summary>
     public class BattleFieldScreen : GameScreen
     {
-        Texture2D BackGround;
         Sprite Person;
+        Texture2D BackGround;
 
         public ScreenState oldState { get; set; }
 
@@ -39,6 +39,8 @@ namespace HelloGame.Screens
             Person.FrameSize = new Point(50, 74);
             Person.CurrentFrame = new Point(0, 0);
             Person.SheetSize = new Point(4, 1);
+            Person.ChangeActionTime = 5;
+            Person.CurrentPosition = new Vector2(80, 80);
         }
 
         /// <summary>

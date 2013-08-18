@@ -21,6 +21,8 @@ namespace HelloGame.Screens
         Texture2D BackGround;
         Sprite Person;
 
+        public ScreenState oldState { get; set; }
+
         //建筑物的默认最大建筑数是4*9=36个.
         Dictionary<Vector2, Texture2D> ConstructionSpriteMap = new Dictionary<Vector2, Texture2D>(36);
 

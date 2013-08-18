@@ -14,22 +14,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HelloGame
 {
-    /// <summary>
-    /// The main menu screen is the first thing displayed when the game starts up.
-    /// </summary>
     class MainMenuScreen : MenuScreen
     {
-        /// <summary>
-        /// Constructor fills in the menu contents.
-        /// </summary>
-        /// 
-
-         ContentManager content;
-
         public MainMenuScreen()
             : base("Main Menu")
         {
-            // Create our menu entries.
             MenuEntry levelSelect = new MenuEntry("New Game");
             levelSelect.Selected += newGamePressed;
             MenuEntries.Add(levelSelect);
@@ -62,9 +51,13 @@ namespace HelloGame
                 new BackgroundScreen(), new MainMenuScreen(), new LevelSelectScreen());
         }
 
-        /// <summary>
-        /// Event handler for our High Scores button.
-        /// </summary>
+        private void alertOk(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.Game.Exit();
+        }
+
+        private void alertCancel(object sender, PlayerIndexEventArgs e)
+        {}
         private void exitCancel(object sender, PlayerIndexEventArgs e)
         {
            OnCancel(e.PlayerIndex);
@@ -82,7 +75,10 @@ namespace HelloGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                ScreenManager.AddScreen(new MessageBoxScreen("Warnning"), null);
+                MessageBoxScreen alert = new MessageBoxScreen("Warnning");
+                alert.ok.Selected += alertOk;
+                alert.cancel.Selected += alertCancel;
+                ScreenManager.AddScreen(alert, null);
             }
             else
                 base.HandleInput(input);

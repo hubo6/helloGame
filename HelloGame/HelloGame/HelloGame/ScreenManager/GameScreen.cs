@@ -22,6 +22,7 @@ namespace HelloGame
         Active,
         TransitionOff,
         Hidden,
+        Pause
     }
 
 

@@ -209,8 +209,7 @@ namespace HelloGame
 
                 // set the entry's position
                 menuEntry.Position = position;
-               // backGround.rect = new Rectangle((int)positionBackground.X, 0, backGround.img.Width, backGround.img.Height);
-                backGround.rect = new Rectangle((int)position.X, (int)position.Y, menuEntry.GetWidth(this), menuEntry.GetHeight(this));
+                backGround.rect = new Rectangle((int)positionBackground.X, 0, backGround.img.Width, ScreenManager.GraphicsDevice.Viewport.Height);
 
                 // move down for the next entry the size of this entry plus our padding
                 position.Y += menuEntry.GetHeight(this) + (menuEntryPadding * 2);

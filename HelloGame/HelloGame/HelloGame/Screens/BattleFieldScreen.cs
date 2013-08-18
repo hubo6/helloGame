@@ -82,24 +82,45 @@ namespace HelloGame.Screens
             base.Draw(gameTime);
         }
 
+        private void alertOk(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, false, null,new BackgroundScreen(), new MainMenuScreen());
+        }
+
+        private void alertCancel(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenState = oldState;
+        }
         public override void HandleInput(InputState input)
         {
-            foreach (GestureSample gesture in input.Gestures)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                switch (gesture.GestureType)
+                oldState = ScreenState;
+                ScreenState = ScreenState.Pause;
+                MessageBoxScreen alert = new MessageBoxScreen("ALERT");
+                alert.ok.Selected += alertOk;
+                alert.cancel.Selected += alertCancel;
+                ScreenManager.AddScreen(alert, null);
+            }
+            else
+            {
+                foreach (GestureSample gesture in input.Gestures)
                 {
-                    case GestureType.Tap:
-                        {
-                            OnTouchUpEven(gesture);
-                            System.Diagnostics.Debug.WriteLine("**点击事件:坐标为'{0},{1}'.", gesture.Position.X, gesture.Position.Y);
-                        }
-                        break;
-                    //case :
-                    //    break;
-                    //case :
-                    //    break;
-                    default:
-                        break;
+                    switch (gesture.GestureType)
+                    {
+                        case GestureType.Tap:
+                            {
+                                OnTouchUpEven(gesture);
+                                System.Diagnostics.Debug.WriteLine("**点击事件:坐标为'{0},{1}'.", gesture.Position.X, gesture.Position.Y);
+                            }
+                            break;
+                        //case :
+                        //    break;
+                        //case :
+                        //    break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

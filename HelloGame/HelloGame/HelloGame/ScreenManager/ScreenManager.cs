@@ -188,7 +188,8 @@ namespace HelloGame
                 screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
 
                 // Update the screen.
-                screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+                if (screen.ScreenState != ScreenState.Pause)
+                    screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.Active)

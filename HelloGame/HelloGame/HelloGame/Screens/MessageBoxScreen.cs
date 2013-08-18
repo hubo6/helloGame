@@ -31,23 +31,17 @@ namespace HelloGame
 
         #region Events
 
-        public event EventHandler<PlayerIndexEventArgs> Accepted;
-        public event EventHandler<PlayerIndexEventArgs> Cancelled;
 
-        MenuEntry ok = new MenuEntry("OK");
-        MenuEntry cancel = new MenuEntry("Cancel");
+        public MenuEntry ok = new MenuEntry("OK");
+        public MenuEntry cancel = new MenuEntry("Cancel");
 
         // Hook up menu event handlers.
         #endregion
 
         #region Initialization
         
-         void okSelected(object sender, PlayerIndexEventArgs e)
-         {
-             ScreenManager.Game.Exit();
-
-         }
-         void cancelSelected(object sender, PlayerIndexEventArgs e)
+       
+         void exitScreen(object sender, PlayerIndexEventArgs e)
          {
              ExitScreen();
          }
@@ -58,8 +52,8 @@ namespace HelloGame
             this.message = message;
             IsPopup = true;
 
-            ok.Selected += okSelected;
-            cancel.Selected += cancelSelected;
+            ok.Selected += exitScreen;
+            cancel.Selected += exitScreen;
             // 
             // Add entries to the menu.
             MenuEntries.Add(ok);

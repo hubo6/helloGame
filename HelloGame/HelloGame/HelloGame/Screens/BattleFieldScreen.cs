@@ -18,16 +18,15 @@ namespace HelloGame.Screens
     /// </summary>
     public class BattleFieldScreen : GameScreen
     {
-
         Texture2D BackGround;
-        Texture2D Person;
+        Sprite Person;
 
         //建筑物的默认最大建筑数是4*9=36个.
         Dictionary<Vector2, Texture2D> ConstructionSpriteMap = new Dictionary<Vector2, Texture2D>(36);
 
-        Point frameSize = new Point(50, 74);
-        Point currentFrame = new Point(0, 0);
-        Point sheetSize = new Point(4, 1); 
+        //Point frameSize = new Point(50, 74);
+        //Point currentFrame = new Point(0, 0);
+        //Point sheetSize = new Point(4, 1); 
 
         public override void LoadContent()
         {
@@ -36,7 +35,12 @@ namespace HelloGame.Screens
             EnabledGestures = EnabledGestures | GestureType.Tap;
 
             BackGround = Content.Load<Texture2D>(@"Images/BackGround/backGround_800_480");
-            Person = Content.Load<Texture2D>(@"Images/enemy/person");
+
+            //建立动态精灵,并且设置动画信息
+            Person = new Sprite(Content.Load<Texture2D>(@"Images/enemy/person"));
+            Person.FrameSize = new Point(50, 74);
+            Person.CurrentFrame = new Point(0, 0);
+            Person.SheetSize = new Point(4, 1);
         }
 
         /// <summary>
@@ -45,24 +49,22 @@ namespace HelloGame.Screens
         /// <param name="gameTime">提供计时值的快照。</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            // 允许游戏退出
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                ScreenManager.Game.Exit();
-
-            ++currentFrame.X;
-            if (currentFrame.X >= sheetSize.X)
-            {
-                currentFrame.X = 0;
-                ++currentFrame.Y;
-                if (currentFrame.Y >= sheetSize.Y)
-                    currentFrame.Y = 0;
-            }
+            //++currentFrame.X;
+            //if (currentFrame.X >= sheetSize.X)
+            //{
+            //    currentFrame.X = 0;
+            //    ++currentFrame.Y;
+            //    if (currentFrame.Y >= sheetSize.Y)
+            //        currentFrame.Y = 0;
+            //}
+            Person.ChangeSpriteAction();
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
         public override void Draw(GameTime gameTime)
         {
+            SpriteBatch SpriteBatch = ScreenManager.SpriteBatch;
             ScreenManager.SpriteBatch.Begin();
             ScreenManager.SpriteBatch.Draw(BackGround, Vector2.Zero, Color.White);
             foreach (var pair in ConstructionSpriteMap)
@@ -73,7 +75,8 @@ namespace HelloGame.Screens
                 ScreenManager.SpriteBatch.Draw(sprite, location, Color.Yellow);
             }
 
-            ScreenManager.SpriteBatch.Draw(Person, Vector2.Zero, new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            Person.Draw(ref SpriteBatch);
+            //ScreenManager.SpriteBatch.Draw(Person.texture2d, Vector2.Zero, new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);

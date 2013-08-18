@@ -121,8 +121,6 @@ namespace HelloGame
         }
     }
 
-    
-
     public class LevelDescriptionPanel : PanelControl
     {
         const float MarginLeft = 20;

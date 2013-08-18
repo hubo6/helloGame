@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using HelloGame.Controls;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using HelloGame.Screens;
 
 
 namespace HelloGame
@@ -78,13 +79,11 @@ namespace HelloGame
 
         private void goPressed(object sender, PlayerIndexEventArgs e)
         {
-            //add game screen
-            int n = 0;
+            LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new BattleFieldScreen());
         }
 
         public override void Draw(GameTime gameTime)
         {
-
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.Begin();
             ScreenManager.SpriteBatch.Draw(buttonGo.img, new Vector2(buttonGo.rect.Left,buttonGo.rect.Top), Color.White);
@@ -108,7 +107,7 @@ namespace HelloGame
                     if (GetButtonHitBounds(buttonGo).Contains(new Point((int)gesture.Position.X, (int)gesture.Position.Y)))
                     {
                         buttonGo.OnSelectEntry();
-                        pressedGoButton = true;  
+                        pressedGoButton = true;
                     }
                 }
             }

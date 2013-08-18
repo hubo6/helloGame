@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using HelloGame.Controls;
+using System.Diagnostics;
 
 
 namespace HelloGame
@@ -82,10 +83,11 @@ namespace HelloGame
             // the hit bounds are the entire width of the screen, and the height of the entry
             // with some additional padding above and below.
             return new Rectangle(
-                0,
-                (int)entry.Position.Y - menuEntryPadding,
-                ScreenManager.GraphicsDevice.Viewport.Width,
-                entry.GetHeight(this) + (menuEntryPadding * 2));
+                (int)entry.Position.X,
+                (int)entry.Position.Y,
+               // ScreenManager.GraphicsDevice.Viewport.Width,
+               entry.GetWidth(this),
+                entry.GetHeight(this));
         }
 
         /// <summary>
@@ -114,6 +116,8 @@ namespace HelloGame
                     {
                         MenuEntry menuEntry = menuEntries[i];
 
+                        Rectangle a = GetMenuEntryHitBounds(menuEntry);
+                        Debug.WriteLine("menu:x:"+a.X.ToString()+"y:"+a.Y.ToString()+"width:"+a.Width.ToString()+"height:"+a.Height+"pt:"+tapLocation.X.ToString()+"|"+tapLocation.Y.ToString());
                         if (GetMenuEntryHitBounds(menuEntry).Contains(tapLocation))
                         {
                             // select the entry. since gestures are only available on Windows Phone,
@@ -205,7 +209,8 @@ namespace HelloGame
 
                 // set the entry's position
                 menuEntry.Position = position;
-                backGround.rect = new Rectangle((int)positionBackground.X, 0, backGround.img.Width, backGround.img.Height);
+               // backGround.rect = new Rectangle((int)positionBackground.X, 0, backGround.img.Width, backGround.img.Height);
+                backGround.rect = new Rectangle((int)position.X, (int)position.Y, menuEntry.GetWidth(this), menuEntry.GetHeight(this));
 
                 // move down for the next entry the size of this entry plus our padding
                 position.Y += menuEntry.GetHeight(this) + (menuEntryPadding * 2);

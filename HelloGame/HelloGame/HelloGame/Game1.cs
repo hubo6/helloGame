@@ -36,6 +36,7 @@ namespace HelloGame
             graphics.PreferredBackBufferHeight = 768;
 
             screenManager = new ScreenManager(this);
+            //screenManager.TraceEnabled = true;
             Components.Add(screenManager);
 
 

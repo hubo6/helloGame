@@ -173,8 +173,9 @@ namespace HelloGame
 
             Vector2 origin = new Vector2(0, font.LineSpacing / 2);
             if (EntryImage != null)
-                spriteBatch.Draw(EntryImage, new Rectangle((int)(position.X - origin.X)-16, (int)(position.Y - origin.Y), Width+32, Height), Color.White);
-            spriteBatch.DrawString(font, text, position, color, 0, origin, scale, SpriteEffects.None, 0);
+                //spriteBatch.Draw(EntryImage, new Rectangle((int)(position.X - origin.X)-16, (int)(position.Y - origin.Y), Width+32, Height), Color.White);
+                spriteBatch.Draw(EntryImage, new Rectangle((int)position.X, (int)position.Y, Width , Height), Color.White);
+            spriteBatch.DrawString(font, text, position + new Vector2(0, GetHeight(screen)/2), color, 0, origin, scale, SpriteEffects.None, 0);
         }
 
 

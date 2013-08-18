@@ -38,6 +38,7 @@ namespace HelloGame
 
         SpriteBatch spriteBatch;
         SpriteFont font;
+        public SpriteFont menuFont { get;set; }
         Texture2D blankTexture;
 
         bool isInitialized;
@@ -130,7 +131,7 @@ namespace HelloGame
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = content.Load<SpriteFont>("Font\\MenuTitle");
-
+            menuFont = content.Load<SpriteFont>("Font\\menufont");
             blankTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             blankTexture.SetData(new[] { Color.White });
 
@@ -224,7 +225,7 @@ namespace HelloGame
             foreach (GameScreen screen in screens)
                 screenNames.Add(screen.GetType().Name);
 
-            Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
+            System.Diagnostics.Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
         }
 
 

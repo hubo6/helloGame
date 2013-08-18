@@ -80,6 +80,7 @@
     <Compile Include="ScreenManager\InputState.cs" />
     <Compile Include="ScreenManager\ScreenManager.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
+    <Compile Include="Screens\BattleFieldScreen.cs" />
     <Compile Include="Screens\GameStage.cs" />
     <Compile Include="Screens\HighScoreScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Screens\MessageBoxScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="Screens\SingleControlScreen.cs" />
+    <Compile Include="Sprite.cs" />
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>

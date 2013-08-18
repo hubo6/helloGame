@@ -23,8 +23,31 @@ namespace HelloGame.Screens
 
         public ScreenState oldState { get; set; }
 
-        public int difficultMeter { get; set; }
+        public int currentLevel { get; set; }
+        public int currentWave { get; set; }
         public int timeSpan { get; set; }
+
+        public int createEnemies()
+        {
+            enemyList.Clear();
+            Random ro = new Random();
+            ContentManager Content = ScreenManager.Game.Content;
+            int num = (currentLevel + 1) * 10 + (currentWave) * 5;
+            for (int n = 0; n < num; n++)
+            {
+                Sprite enemy = new Sprite(Content.Load<Texture2D>(@"Images/enemy/person"));//random person12345;
+                
+                enemy.FrameSize = new Point(50, 74);
+                enemy.CurrentFrame = new Point(ro.Next(0, 3), 0);
+                enemy.SheetSize = new Point(4, 1);
+                enemy.ChangeActionTime = ro.Next(1, 5);
+                enemy.CurrentPosition = new Vector2(ScreenManager.GraphicsDevice.Viewport.Width +
+                                                ro.Next(0, 3) * enemy.texture2d.Width / enemy.SheetSize.X,
+                                                ro.Next(1, 4) * enemy.texture2d.Height);
+                enemyList.Add(enemy);
+            }
+            return enemyList.Count;
+        }
 
         //建筑物的默认最大建筑数是4*9=36个.
         Dictionary<Vector2, Texture2D> ConstructionSpriteMap = new Dictionary<Vector2, Texture2D>(36);
@@ -39,16 +62,7 @@ namespace HelloGame.Screens
             BackGround = Content.Load<Texture2D>(@"Images/BackGround/backGround_800_480");
 
             //建立动态精灵,并且设置动画信息
-            Person = new Sprite(Content.Load<Texture2D>(@"Images/enemy/person"));
-            Person.FrameSize = new Point(50, 74);
-            Person.CurrentFrame = new Point(0, 0);
-            Person.SheetSize = new Point(4, 1);
-            Person.ChangeActionTime = 5;
-            Person.CurrentPosition = new Vector2(ScreenManager.GraphicsDevice.Viewport.Width, 0.0f);
-            difficultMeter = 50;
-            timeSpan = 30 * 5;
-            //for (int n = 0; n < 15; n++)
-                enemyList.Add(Person);
+            createEnemies();
         }
 
         /// <summary>
@@ -61,7 +75,7 @@ namespace HelloGame.Screens
             for (int n = enemyList.Count - 1; n >=0; n--)
             {
 
-                if (enemyList[n].CurrentPosition.X + enemyList[n].texture2d.Width <= 0)
+                if (enemyList[n].CurrentPosition.X + enemyList[n].texture2d.Width / enemyList[n].SheetSize.X <= 0)
                 {
                     enemyList.RemoveAt(n);
                 }
@@ -72,6 +86,9 @@ namespace HelloGame.Screens
                 }
 
             }
+
+            if (enemyList.Count == 0)
+                createEnemies();
             
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);

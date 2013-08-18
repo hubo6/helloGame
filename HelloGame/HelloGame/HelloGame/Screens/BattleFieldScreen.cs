@@ -26,10 +26,6 @@ namespace HelloGame.Screens
         //建筑物的默认最大建筑数是4*9=36个.
         Dictionary<Vector2, Texture2D> ConstructionSpriteMap = new Dictionary<Vector2, Texture2D>(36);
 
-        //Point frameSize = new Point(50, 74);
-        //Point currentFrame = new Point(0, 0);
-        //Point sheetSize = new Point(4, 1); 
-
         public override void LoadContent()
         {
             ContentManager Content = ScreenManager.Game.Content;
@@ -51,14 +47,6 @@ namespace HelloGame.Screens
         /// <param name="gameTime">提供计时值的快照。</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            //++currentFrame.X;
-            //if (currentFrame.X >= sheetSize.X)
-            //{
-            //    currentFrame.X = 0;
-            //    ++currentFrame.Y;
-            //    if (currentFrame.Y >= sheetSize.Y)
-            //        currentFrame.Y = 0;
-            //}
             Person.ChangeSpriteAction();
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -78,7 +66,6 @@ namespace HelloGame.Screens
             }
 
             Person.Draw(ref SpriteBatch);
-            //ScreenManager.SpriteBatch.Draw(Person.texture2d, Vector2.Zero, new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);

@@ -74,6 +74,7 @@ namespace HelloGame
         #region 公共属性
         /// <summary>
         /// 这里做动态精灵的位置变化时的函数,供子类覆盖使用
+        /// 这里可以调整精灵的动作
         /// </summary>
         public virtual void ChangeSpriteAction()
         {
@@ -87,6 +88,10 @@ namespace HelloGame
             }
         }
 
+        /// <summary>
+        /// 这里写单独的Draw函数用来给框架下的Draw调用
+        /// </summary>
+        /// <param name="SpriteBatch">框架下的Draw调用时传入的参数</param>
         public virtual void Draw(ref SpriteBatch SpriteBatch)
         {
             if (texture2d == null)

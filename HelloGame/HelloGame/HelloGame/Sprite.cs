@@ -25,9 +25,11 @@ namespace HelloGame
         public Texture2D texture2d = null;
 
         //精灵的绘制坐标信息
-        Vector2 vector = Vector2.Zero;
+        Vector2 currentPosition = Vector2.Zero;
 
         //下面是关于精灵动作改变的信息
+        int changeActionTime = 1;
+        int currentActionTime = 1;
         Point frameSize = new Point();
         Point currentFrame = new Point();
         Point sheetSize = new Point();
@@ -69,22 +71,49 @@ namespace HelloGame
             get { return sheetSize; }
             set { sheetSize = value; }
         }
+
+        /// <summary>
+        /// 当前精灵的位置
+        /// </summary>
+        public Vector2 CurrentPosition
+        {
+            get { return currentPosition; }
+            set { currentPosition = value; }
+        }
+
+        /// <summary>
+        /// 经过多少帧的时间,动画改变一次
+        /// </summary>
+        public int ChangeActionTime
+        {
+            get { return changeActionTime; }
+            set { changeActionTime = value; }
+        }
         #endregion
 
         #region 公共属性
         /// <summary>
         /// 这里做动态精灵的位置变化时的函数,供子类覆盖使用
-        /// 这里可以调整精灵的动作
+        /// 原理:
+        ///     函数没经过一帧会进一次函数,这里有一个变量记录了
         /// </summary>
         public virtual void ChangeSpriteAction()
         {
-            ++currentFrame.X;
-            if (currentFrame.X >= sheetSize.X)
+            if (currentActionTime >= changeActionTime)
             {
-                currentFrame.X = 0;
-                ++currentFrame.Y;
-                if (currentFrame.Y >= sheetSize.Y)
-                    currentFrame.Y = 0;
+                ++currentFrame.X;
+                if (currentFrame.X >= sheetSize.X)
+                {
+                    currentFrame.X = 0;
+                    ++currentFrame.Y;
+                    if (currentFrame.Y >= sheetSize.Y)
+                        currentFrame.Y = 0;
+                }
+                currentActionTime = 1;
+            }
+            else
+            {
+                ++currentActionTime;
             }
         }
 
@@ -98,8 +127,7 @@ namespace HelloGame
             {
                 System.Diagnostics.Debug.WriteLine("没有引用的精灵对象,所以没有执行精灵自己的绘制信息.");
             }
-
-            SpriteBatch.Draw(texture2d, Vector2.Zero, new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            SpriteBatch.Draw(texture2d, currentPosition, new Rectangle(currentFrame.X * frameSize.X, currentFrame.Y * frameSize.Y, frameSize.X, frameSize.Y), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
         }
         #endregion
     }

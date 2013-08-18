@@ -11,6 +11,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HelloGame
 {
+    enum AttackStyle
+    {
+        launch = 0,
+        fight
+    };
+
     public class Sprite
     {
         public Sprite(Texture2D texture2d)
@@ -25,14 +31,26 @@ namespace HelloGame
         public Texture2D texture2d = null;
 
         //精灵的绘制坐标信息
-        Vector2 currentPosition = Vector2.Zero;
+        Vector2 MoveDirection = Vector2.Zero;
+        public Vector2 currentPosition = Vector2.Zero;
 
         //下面是关于精灵动作改变的信息
         int changeActionTime = 1;
         int currentActionTime = 1;
         Point frameSize = new Point();
-        Point currentFrame = new Point();
-        Point sheetSize = new Point();
+        Point currentFrame = new Point(0,0);
+        Point sheetSize = new Point(1,1);
+
+        //精灵的攻击属性,这里主要是设置攻击的时间
+        int attackIntervalTime = 30;
+        int attackChargeTime = 1;
+        AttackStyle attackStyle = AttackStyle.launch;
+
+        internal AttackStyle AttackStyle
+        {
+            get { return attackStyle; }
+            set { attackStyle = value; }
+        }
         #endregion
 
         #region 属性
@@ -89,6 +107,15 @@ namespace HelloGame
             get { return changeActionTime; }
             set { changeActionTime = value; }
         }
+
+        /// <summary>
+        /// 设置攻击时间间隔
+        /// </summary>
+        public int AttackIntervalTime
+        {
+          get { return attackIntervalTime; }
+          set { attackIntervalTime = value; }
+        }
         #endregion
 
         #region 公共属性
@@ -97,8 +124,49 @@ namespace HelloGame
         /// 原理:
         ///     函数没经过一帧会进一次函数,这里有一个变量记录了
         /// </summary>
+        public virtual Boolean CanAttack(Point point)
+        {
+            switch (attackStyle)
+            {
+                case AttackStyle.launch:
+                    {
+                        //如果当前建筑物的右边框小于或者等于传入点的左边框的时候
+                        if ((currentPosition.X + texture2d.Width) <= point.X)
+                        {
+                            if (attackChargeTime >= attackIntervalTime)
+                            {
+                                attackChargeTime = 1;
+                                return true;
+                            }
+                            else
+                                return false;
+                        }
+                        else
+                            return false;
+                    }
+                case AttackStyle.fight:
+                    {
+                        //这里需要写近身算法.
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 这里做动态精灵的位置变化时的函数,供子类覆盖使用
+        /// 原理:
+        ///     函数没经过一帧会进一次函数,这里有一个变量记录了
+        /// </summary>
         public virtual void ChangeSpriteAction()
         {
+            //调整攻击蓄力时间
+            ++attackChargeTime;
+
+            //调整精灵的动作改变信息
             if (currentActionTime >= changeActionTime)
             {
                 ++currentFrame.X;

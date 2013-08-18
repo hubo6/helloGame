@@ -24,7 +24,8 @@ namespace HelloGame.Screens
         public ScreenState oldState { get; set; }
 
         //建筑物的默认最大建筑数是4*9=36个.
-        Dictionary<Vector2, Texture2D> ConstructionSpriteMap = new Dictionary<Vector2, Texture2D>(36);
+        Dictionary<Vector2, Sprite> ConstructionSpriteMap = new Dictionary<Vector2, Sprite>(36);
+        List<Sprite> BulletList = new List<Sprite>();
 
         public override void LoadContent()
         {
@@ -40,7 +41,7 @@ namespace HelloGame.Screens
             Person.CurrentFrame = new Point(0, 0);
             Person.SheetSize = new Point(4, 1);
             Person.ChangeActionTime = 5;
-            Person.CurrentPosition = new Vector2(80, 80);
+            Person.CurrentPosition = Vector2.Zero;
         }
 
         /// <summary>
@@ -49,6 +50,30 @@ namespace HelloGame.Screens
         /// <param name="gameTime">提供计时值的快照。</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
+            foreach (var pair in ConstructionSpriteMap)
+            {
+                pair.Value.ChangeSpriteAction();
+                if (pair.Value.CanAttack(new Point(1000,160)))
+                {
+                    Sprite Bulletobj = new Sprite(ScreenManager.Game.Content.Load<Texture2D>(@"Images/Bullet/Bullet"));
+                    Bulletobj.FrameSize = new Point(20, 20);
+                    Bulletobj.CurrentFrame = new Point(0, 0);
+                    Bulletobj.SheetSize = new Point(1, 1);
+                    Bulletobj.ChangeActionTime = 1;
+                    Bulletobj.AttackIntervalTime = 30;
+                    Bulletobj.CurrentPosition = new Vector2(pair.Value.CurrentPosition.X + pair.Value.texture2d.Width, pair.Value.CurrentPosition.Y+8);// new Vector2(position.X * 80, position.Y * 80);
+                    Bulletobj.AttackStyle = AttackStyle.launch;
+                    BulletList.Add(Bulletobj);
+                }
+            }
+
+            for (int n = BulletList.Count - 1; n >= 0; n--)
+            {
+                BulletList[n].currentPosition.X += 10;
+                if (BulletList[n].currentPosition.X > 1024)
+                    BulletList.RemoveAt(n);
+            }
+
             Person.ChangeSpriteAction();
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -61,10 +86,12 @@ namespace HelloGame.Screens
             ScreenManager.SpriteBatch.Draw(BackGround, Vector2.Zero, Color.White);
             foreach (var pair in ConstructionSpriteMap)
             {
-                Texture2D sprite = pair.Value;
-                Vector2 vector = pair.Key;
-                Vector2 location = new Vector2(vector.X * 80, vector.Y * 80);
-                ScreenManager.SpriteBatch.Draw(sprite, location, Color.Yellow);
+                pair.Value.Draw(ref SpriteBatch);
+            }
+
+            foreach (Sprite obj in BulletList)
+            {
+                obj.Draw(ref SpriteBatch);
             }
 
             Person.Draw(ref SpriteBatch);
@@ -154,10 +181,20 @@ namespace HelloGame.Screens
             Vector2 position = new Vector2((int)gesture.Position.X / 80, (int)gesture.Position.Y / 80);
             System.Diagnostics.Debug.WriteLine("建筑物区域坐标'{0},{1}'.", (int)position.X, (int)position.Y);
 
-            Texture2D ConstructionSprite = null;
+            //构造炮塔
+            Sprite ConstructionSprite = null;
             if (ConstructionSpriteMap.TryGetValue(position, out ConstructionSprite) == false)
             {
-                ConstructionSprite = ScreenManager.Game.Content.Load<Texture2D>(@"Images/Construction/sprite");
+                ConstructionSprite = new Sprite(ScreenManager.Game.Content.Load<Texture2D>(@"Images/Construction/sprite"));
+                ConstructionSprite.FrameSize = new Point(80, 80);
+                ConstructionSprite.CurrentFrame = new Point(0, 0);
+                ConstructionSprite.SheetSize = new Point(1, 1);
+                ConstructionSprite.ChangeActionTime = 1;
+                ConstructionSprite.AttackIntervalTime = 30;
+                ConstructionSprite.CurrentPosition = new Vector2(position.X * 80, position.Y * 80);
+                ConstructionSprite.AttackStyle = AttackStyle.launch;
+
+                //ConstructionSprite = ScreenManager.Game.Content.Load<Texture2D>(@"Images/Construction/sprite");
                 ConstructionSpriteMap.Add(position, ConstructionSprite);
             }
             else

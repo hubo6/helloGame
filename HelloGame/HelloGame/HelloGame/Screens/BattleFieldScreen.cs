@@ -23,8 +23,12 @@ namespace HelloGame.Screens
 
         public ScreenState oldState { get; set; }
 
+        public int difficultMeter { get; set; }
+        public int timeSpan { get; set; }
+
         //建筑物的默认最大建筑数是4*9=36个.
         Dictionary<Vector2, Texture2D> ConstructionSpriteMap = new Dictionary<Vector2, Texture2D>(36);
+        List<Sprite> enemyList = new List<Sprite>(36);
 
         public override void LoadContent()
         {
@@ -40,7 +44,11 @@ namespace HelloGame.Screens
             Person.CurrentFrame = new Point(0, 0);
             Person.SheetSize = new Point(4, 1);
             Person.ChangeActionTime = 5;
-            Person.CurrentPosition = new Vector2(80, 80);
+            Person.CurrentPosition = new Vector2(ScreenManager.GraphicsDevice.Viewport.Width, 0.0f);
+            difficultMeter = 50;
+            timeSpan = 30 * 5;
+            //for (int n = 0; n < 15; n++)
+                enemyList.Add(Person);
         }
 
         /// <summary>
@@ -49,9 +57,33 @@ namespace HelloGame.Screens
         /// <param name="gameTime">提供计时值的快照。</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            Person.ChangeSpriteAction();
+
+            for (int n = enemyList.Count - 1; n >=0; n--)
+            {
+
+                if (enemyList[n].CurrentPosition.X + enemyList[n].texture2d.Width <= 0)
+                {
+                    enemyList.RemoveAt(n);
+                }
+                else
+                {
+                    enemyList[n].ChangeSpriteAction();
+                    enemyList[n].CurrentPosition += new Vector2(-150.0f * 0.03f, 0.00f);
+                }
+
+            }
+            
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+        protected void drawEnemyList()
+        {
+            SpriteBatch SpriteBatch = ScreenManager.SpriteBatch;
+            foreach (Sprite enemy in enemyList)
+            {
+                enemy.Draw(ref SpriteBatch);
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -67,9 +99,8 @@ namespace HelloGame.Screens
                 ScreenManager.SpriteBatch.Draw(sprite, location, Color.Yellow);
             }
 
-            Person.Draw(ref SpriteBatch);
+            drawEnemyList();
             ScreenManager.SpriteBatch.End();
-
             base.Draw(gameTime);
         }
 

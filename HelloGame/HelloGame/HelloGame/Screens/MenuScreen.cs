@@ -117,7 +117,7 @@ namespace HelloGame
                         MenuEntry menuEntry = menuEntries[i];
 
                         Rectangle a = GetMenuEntryHitBounds(menuEntry);
-                        Debug.WriteLine("menu:x:"+a.X.ToString()+"y:"+a.Y.ToString()+"width:"+a.Width.ToString()+"height:"+a.Height+"pt:"+tapLocation.X.ToString()+"|"+tapLocation.Y.ToString());
+                        //Debug.WriteLine("menu:x:"+a.X.ToString()+"y:"+a.Y.ToString()+"width:"+a.Width.ToString()+"height:"+a.Height+"pt:"+tapLocation.X.ToString()+"|"+tapLocation.Y.ToString());
                         if (GetMenuEntryHitBounds(menuEntry).Contains(tapLocation))
                         {
                             // select the entry. since gestures are only available on Windows Phone,

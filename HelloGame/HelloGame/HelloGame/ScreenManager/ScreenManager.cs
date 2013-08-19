@@ -172,9 +172,16 @@ namespace HelloGame
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
             screensToUpdate.Clear();
-
-            foreach (GameScreen screen in screens)
-                screensToUpdate.Add(screen);
+            if (screens[screens.Count - 1].IsPopup)
+            {
+                screensToUpdate.Add(screens[screens.Count - 1]);
+            }
+            else
+            {
+                foreach (GameScreen screen in screens)
+                    screensToUpdate.Add(screen);
+            }
+            
 
             bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
@@ -188,8 +195,7 @@ namespace HelloGame
                 screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
 
                 // Update the screen.
-                if (screen.ScreenState != ScreenState.Pause)
-                    screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+                screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.Active)

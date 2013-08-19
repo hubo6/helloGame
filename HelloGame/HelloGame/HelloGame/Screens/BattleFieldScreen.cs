@@ -21,8 +21,6 @@ namespace HelloGame.Screens
         Sprite Person;
         Texture2D BackGround;
 
-        public ScreenState oldState { get; set; }
-
         public int currentLevel { get; set; }
         public int currentWave { get; set; }
         public int timeSpan { get; set; }
@@ -155,19 +153,13 @@ namespace HelloGame.Screens
             LoadingScreen.Load(ScreenManager, false, null,new BackgroundScreen(), new MainMenuScreen());
         }
 
-        private void alertCancel(object sender, PlayerIndexEventArgs e)
-        {
-            ScreenState = oldState;
-        }
         public override void HandleInput(InputState input)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                oldState = ScreenState;
                 ScreenState = ScreenState.Pause;
                 MessageBoxScreen alert = new MessageBoxScreen("ALERT");
                 alert.ok.Selected += alertOk;
-                alert.cancel.Selected += alertCancel;
                 ScreenManager.AddScreen(alert, null);
             }
             else
